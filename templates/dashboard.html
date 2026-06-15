@@ -1,0 +1,91 @@
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+}
+
+/* Top header */
+.header {
+    background: #1b5e20;
+    color: white;
+    padding: 25px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Container */
+.container {
+    padding: 30px;
+}
+
+/* Cards row */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Card style */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    text-align: center;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Colors */
+.green { border-left: 6px solid #2e7d32; }
+.blue { border-left: 6px solid #1976d2; }
+.orange { border-left: 6px solid #ef6c00; }
+
+/* Numbers */
+.number {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Responsive */
+@media(max-width: 768px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="header">
+    🌿 Nursery Management Dashboard
+</div>
+
+<div class="container">
+
+    <div class="cards">
+
+        <div class="card green">
+            <h3>🌱 Total Plants</h3>
+            <div class="number">{{ total_plants }}</div>
+        </div>
+
+        <div class="card blue">
+            <h3>🧑 Total Customers</h3>
+            <div class="number">{{ total_customers }}</div>
+        </div>
+
+        <div class="card orange">
+            <h3>📦 Total Orders</h3>
+            <div class="number">{{ total_orders }}</div>
+        </div>
+
+    </div>
+
+</div>
