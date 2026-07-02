@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from nursery import views
+from nursery.views import FertilizerView
 from nursery.views import (
     add_plant,
     plant_list,

@@ -45,4 +45,13 @@ class Pot(models.Model):
     image = models.ImageField(upload_to='pots/', blank=True, null=True)
 
     def __str__(self):
-        return self.name     
+        return self.name   
+
+class Fertilizer(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField()
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name  

@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Plant, Pot
+from .models import Plant, Pot, Customer, Order, OrderItem, Fertilizer
 from .forms import PlantForm, PotForm
+
 from django.http import HttpResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import PlantSerializer, PotSerializer
+from drf_yasg.utils import swagger_auto_schema
+from .serializers import PlantSerializer, PotSerializer, CustomerSerializer, OrderSerializer, OrderItemSerializer, FertilizerSerializer
+
 
 def home(request):
     return HttpResponse("Welcome to Nursery Management System")
@@ -60,6 +63,11 @@ def get_plants(request):
     "message": "All plants fetched",
     "data": serializer.data
 })
+
+@swagger_auto_schema(
+    method='post',
+    request_body=PlantSerializer
+)
 
 @api_view(['POST'])
 def add_plant_api(request):
@@ -173,6 +181,11 @@ def get_pots(request):
         "data": serializer.data
     })
 
+@swagger_auto_schema(
+    method='post',
+    request_body=PotSerializer
+)
+
 @api_view(['POST'])
 def add_pot_api(request):
 
@@ -238,4 +251,308 @@ def delete_pot_api(request, id):
         "message": "Pot deleted successfully"
     })
 
+@api_view(['GET'])
+def get_customers(request):
 
+    customers = Customer.objects.all()
+
+    serializer = CustomerSerializer(customers, many=True)
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "All customers fetched",
+        "data": serializer.data
+    })
+
+@swagger_auto_schema(
+    method='post',
+    request_body=CustomerSerializer
+)
+@api_view(['POST'])
+def add_customer_api(request):
+
+    serializer = CustomerSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Customer added successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['PUT'])
+def update_customer_api(request, id):
+
+    customer = Customer.objects.get(id=id)
+
+    serializer = CustomerSerializer(
+        customer,
+        data=request.data
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Customer updated successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['DELETE'])
+def delete_customer_api(request, id):
+
+    customer = Customer.objects.get(id=id)
+
+    customer.delete()
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "Customer deleted successfully"
+    })
+
+@api_view(['GET'])
+def get_orders(request):
+
+    orders = Order.objects.all()
+
+    serializer = OrderSerializer(orders, many=True)
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "All orders fetched",
+        "data": serializer.data
+    })
+
+@swagger_auto_schema(
+    method='post',
+    request_body=OrderSerializer
+)
+@api_view(['POST'])
+def add_order_api(request):
+
+    serializer = OrderSerializer(data=request.data)
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Order added successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['PUT'])
+def update_order_api(request, id):
+
+    order = Order.objects.get(id=id)
+
+    serializer = OrderSerializer(
+        order,
+        data=request.data
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Order updated successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['DELETE'])
+def delete_order_api(request, id):
+
+    order = Order.objects.get(id=id)
+
+    order.delete()
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "Order deleted successfully"
+    })
+
+@api_view(['GET'])
+def get_order_items(request):
+
+    order_items = OrderItem.objects.all()
+
+    serializer = OrderItemSerializer(order_items, many=True)
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "All order items fetched",
+        "data": serializer.data
+    })
+
+@swagger_auto_schema(
+    method='post',
+    request_body=OrderItemSerializer
+)
+@api_view(['POST'])
+def add_order_item_api(request):
+
+    serializer = OrderItemSerializer(data=request.data)
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Order item added successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['PUT'])
+def update_order_item_api(request, id):
+
+    order_item = OrderItem.objects.get(id=id)
+
+    serializer = OrderItemSerializer(
+        order_item,
+        data=request.data
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Order item updated successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['DELETE'])
+def delete_order_item_api(request, id):
+
+    order_item = OrderItem.objects.get(id=id)
+
+    order_item.delete()
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "Order item deleted successfully"
+    })
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Fertilizer
+from .serializers import FertilizerSerializer
+
+from drf_yasg.utils import swagger_auto_schema
+class FertilizerView(APIView):
+
+    def get(self, request):
+        fertilizers = Fertilizer.objects.all()
+        serializer = FertilizerSerializer(fertilizers, many=True)
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "All fertilizers fetched",
+            "data": serializer.data
+        })
+    
+    @swagger_auto_schema(request_body=FertilizerSerializer)
+    def post(self, request):
+        serializer = FertilizerSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "status": "success",
+                "code": 201,
+                "message": "Fertilizer added successfully",
+                "data": serializer.data
+            })
+
+        return Response({
+            "status": "failed",
+            "code": 400,
+            "errors": serializer.errors
+        })
+    
+class FertilizerDetailView(APIView):
+
+    @swagger_auto_schema(request_body=FertilizerSerializer)
+    def put(self, request, id):
+        fert = get_object_or_404(Fertilizer, id=id)
+        serializer = FertilizerSerializer(fert, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "status": "success",
+                "message": "Updated successfully",
+                "data": serializer.data
+            })
+
+        return Response({
+            "status": "failed",
+            "errors": serializer.errors
+        })
+
+    def delete(self, request, id):
+        fert = get_object_or_404(Fertilizer, id=id)
+        fert.delete()
+
+        return Response({
+            "status": "success",
+            "message": "Deleted successfully"
+        })
