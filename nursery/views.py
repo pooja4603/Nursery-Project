@@ -125,15 +125,15 @@ def delete_plant_api(request, id):
     "message": "Plant deleted successfully"
 })
 
-@api_view(['GET'])
-def delete_plant_api(request, id):
+# @api_view(['GET'])
+# def delete_plant_api(request, id):
 
-    plant = Plant.objects.get(id=id)
+#     plant = Plant.objects.get(id=id)
 
-    plant.delete()
+#     plant.delete()
 
-    return Response({
-        "status": "success",
-        "code": 200,
-        "message": "Plant deleted successfully"
-    })
+#     return Response({
+#         "status": "success",
+#         "code": 200,
+#         "message": "Plant deleted successfully"
+#     })
