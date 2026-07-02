@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Plant
-from .forms import PlantForm
+from .models import Plant, Pot
+from .forms import PlantForm, PotForm
 from django.http import HttpResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import PlantSerializer
+from .serializers import PlantSerializer, PotSerializer
 
 def home(request):
     return HttpResponse("Welcome to Nursery Management System")
@@ -125,15 +125,117 @@ def delete_plant_api(request, id):
     "message": "Plant deleted successfully"
 })
 
-# @api_view(['GET'])
-# def delete_plant_api(request, id):
+def pot_list(request):
+    pots = Pot.objects.all()
+    return render(request, 'pot_list.html', {'pots': pots})
 
-#     plant = Plant.objects.get(id=id)
+def add_pot(request):
+    form = PotForm()
 
-#     plant.delete()
+    if request.method == "POST":
+        form = PotForm(request.POST, request.FILES)
 
-#     return Response({
-#         "status": "success",
-#         "code": 200,
-#         "message": "Plant deleted successfully"
-#     })
+        if form.is_valid():
+            form.save()
+            return redirect('pot_list')
+
+    return render(request, 'add_pot.html', {'form': form})
+
+def edit_pot(request, id):
+    pot = get_object_or_404(Pot, id=id)
+    form = PotForm(instance=pot)
+
+    if request.method == "POST":
+        form = PotForm(request.POST, request.FILES, instance=pot)
+
+        if form.is_valid():
+            form.save()
+            return redirect('pot_list')
+
+    return render(request, 'edit_pot.html', {'form': form})
+
+def delete_pot(request, id):
+    pot = get_object_or_404(Pot, id=id)
+    pot.delete()
+    return redirect('pot_list')
+
+@api_view(['GET'])
+def get_pots(request):
+
+    pots = Pot.objects.all()
+
+    serializer = PotSerializer(pots, many=True)
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "All pots fetched",
+        "data": serializer.data
+    })
+
+@api_view(['POST'])
+def add_pot_api(request):
+
+    serializer = PotSerializer(
+        data=request.data
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Pot added successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['PUT'])
+def update_pot_api(request, id):
+
+    pot = Pot.objects.get(id=id)
+
+    serializer = PotSerializer(
+        pot,
+        data=request.data,
+        partial=True
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+            "status": "success",
+            "code": 200,
+            "message": "Pot updated successfully",
+            "data": serializer.data
+        })
+
+    return Response({
+        "status": "failed",
+        "code": 400,
+        "errors": serializer.errors
+    })
+
+@api_view(['DELETE'])
+def delete_pot_api(request, id):
+
+    pot = Pot.objects.get(id=id)
+
+    pot.delete()
+
+    return Response({
+        "status": "success",
+        "code": 200,
+        "message": "Pot deleted successfully"
+    })
+
+

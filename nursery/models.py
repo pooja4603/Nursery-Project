@@ -34,4 +34,15 @@ class OrderItem(models.Model):
 
     def save(self, *args, **kwargs):
         self.price = self.plant.price * self.quantity
-        super().save(*args, **kwargs)        
+        super().save(*args, **kwargs)   
+
+class Pot(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.IntegerField()
+    description = models.TextField()
+    image = models.ImageField(upload_to='pots/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name     
